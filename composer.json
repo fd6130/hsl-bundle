@@ -1,0 +1,31 @@
+{
+    "name": "fd6130/hsl-bundle",
+    "description": "Install this bundle if you need feature provided from this bundle.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Fd\\HslBundle\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.2.5",
+        "samj/fractal-bundle": "^4.0",
+        "babdev/pagerfanta-bundle": "^2.2",
+        "mark-gerarts/automapper-plus-bundle": "^1.2",
+        "intervention/image": "^2.5",
+        "lexik/jwt-authentication-bundle": "^2.7",
+        "etnynl/jwt-refresh-token-bundle": "^0.9.3",
+        "nesbot/carbon": "^2.32",
+        "symfony-bundles/json-request-bundle": "^3.0",
+        "symfony/apache-pack": "^1.0",
+        "twig/cssinliner-extra": "^3.0",
+        "twig/extra-bundle": "^3.0",
+        "twig/inky-extra": "^3.0",
+        "vich/uploader-bundle": "^1.13"
+    },
+    "require-dev": {
+        "symfony/maker-bundle": "^1.0",
+        "easycorp/easy-deploy-bundle": "^1.0"
+    }
+}

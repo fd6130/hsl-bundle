@@ -1,0 +1,39 @@
+services:
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  # maker-bundle
+  maker.maker.make_hsl_dto:
+    class: Fd\HslBundle\Maker\MakeHslDto
+    #tags: ["maker.command"]
+  maker.maker.make_hsl_transformer:
+    class: Fd\HslBundle\Maker\MakeHslTransformer
+
+  Fd\HslBundle\Command\LexikJWTKeyGeneratorCommand:
+    #tags: ["console.command"]
+
+  # transformers should be public because FractalBundle will fetch
+  # services from container using service id.
+  # App\Transformer\:
+  #   resource: "%kernel.project_dir%/src/Transformer"
+  #   public: true
+
+  # Dto services
+  Fd\HslBundle\DtoRequestResolver:
+    #arguments: ["@validator"]
+    tags:
+      - { name: "controller.argument_value_resolver", priority: 50 }
+
+  # Vich Uploader event
+  Fd\HslBundle\Event\Listener\VichImageUploadListener:
+    tags:
+      - { name: kernel.event_listener, event: vich_uploader.post_upload }
+
+  # pagination services
+  Fd\HslBundle\Pagination\PaginationManager:
+    #arguments: ["@service_container"]
+  
+  Fd\HslBundle\Pagination\DoctrineQueryBuilderPagination:
+    #public: true
+    #arguments: ["@router", "@request_stack"]
