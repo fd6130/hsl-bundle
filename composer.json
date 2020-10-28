@@ -1,6 +1,6 @@
 {
     "name": "fd6130/hsl-bundle",
-    "description": "Install this bundle if you need feature provided from this bundle.",
+    "description": "This bundle has nothing related with Discrete Maths. The words 'HSL' is a meme from our 17-B students in Discrete Maths course.",
     "type": "library",
     "license": "MIT",
     "autoload": {
@@ -14,18 +14,21 @@
         "babdev/pagerfanta-bundle": "^2.2",
         "mark-gerarts/automapper-plus-bundle": "^1.2",
         "intervention/image": "^2.5",
-        "lexik/jwt-authentication-bundle": "^2.7",
-        "etnynl/jwt-refresh-token-bundle": "^0.9.3",
-        "nesbot/carbon": "^2.32",
         "symfony-bundles/json-request-bundle": "^3.0",
         "symfony/apache-pack": "^1.0",
-        "twig/cssinliner-extra": "^3.0",
-        "twig/extra-bundle": "^3.0",
-        "twig/inky-extra": "^3.0",
         "vich/uploader-bundle": "^1.13"
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.0",
         "easycorp/easy-deploy-bundle": "^1.0"
+    },
+    "suggest": {
+        "lexik/jwt-authentication-bundle": "Install this if you need JWT authentication",
+        "etnynl/jwt-refresh-token-bundle": "Install this if you need JWT refresh token",
+        "symfony/webpack-encore-bundle": "Install this if you need Webpack to manage your assets",
+        "twig/cssinliner-extra": "For email css",
+        "twig/extra-bundle": "For email css",
+        "twig/inky-extra": "For email css",
+        "nesbot/carbon": "Easy format your datetime"
     }
 }

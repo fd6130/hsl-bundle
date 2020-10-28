@@ -3,6 +3,7 @@
 namespace Fd\HslBundle\DependencyInjection;
 
 use Fd\HslBundle\HslInterface;
+use League\Fractal\TransformerAbstract;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -14,5 +15,9 @@ class FdHslExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');
+
+        $container->registerForAutoconfiguration(TransformerAbstract::class)
+            ->addTag('fd_hsl.transformer')
+        ;
     }
 }
