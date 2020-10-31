@@ -22,7 +22,7 @@ use SymfonyBundles\JsonRequestBundle\SymfonyBundlesJsonRequestBundle;
 /**
  * @author fd6130 <https://github.com/fd6130>
  */
-class MakeHslDto extends AbstractMaker
+final class MakeHslDto extends AbstractMaker
 {
 
     public static function getCommandName(): string
@@ -35,7 +35,7 @@ class MakeHslDto extends AbstractMaker
         $command
             ->setDescription('Creates a new dto input class')
             ->addArgument('dto_name', InputArgument::OPTIONAL, 'Choose a class name for your dto (e.g. <fg=yellow>User</>)')
-            ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeDto.txt'))
+            ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeHslDto.txt'))
         ;
 
         //$inputConf->setArgumentAsNonInteractive('event');

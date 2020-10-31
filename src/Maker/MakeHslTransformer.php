@@ -29,7 +29,7 @@ use Symfony\Component\Console\Question\Question;
 /**
  * @author fd6130 <https://github.com/fd6130>
  */
-class MakeHslTransformer extends AbstractMaker
+final class MakeHslTransformer extends AbstractMaker
 {
 
     public static function getCommandName(): string
@@ -43,7 +43,7 @@ class MakeHslTransformer extends AbstractMaker
             ->setDescription('Creates a new transformer class')
             ->addArgument('transformer_name', InputArgument::OPTIONAL, 'Choose a class name for your transformer (e.g. <fg=yellow>ExampleTransformer</>)')
             ->addArgument('entity_name', InputArgument::OPTIONAL, 'Which entity you gonna use for this transformer?')
-            ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeTransformer.txt'))
+            ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeHslTransformer.txt'))
         ;
 
         //$inputConf->setArgumentAsNonInteractive('event');
