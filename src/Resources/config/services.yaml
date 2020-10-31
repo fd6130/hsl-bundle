@@ -9,9 +9,12 @@ services:
     #tags: ["maker.command"]
   maker.maker.make_hsl_transformer:
     class: Fd\HslBundle\Maker\MakeHslTransformer
+  maker.maker.make_hsl_crud:
+    class: Fd\HslBundle\Maker\MakeHslCrud
+    arguments: ['@maker.doctrine_helper']
 
   Fd\HslBundle\Command\LexikJWTKeyGeneratorCommand:
-    #tags: ["console.command"]
+    tags: ["console.command"]
 
   # transformers should be public because FractalBundle will fetch
   # services from container using service id.
