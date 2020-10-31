@@ -2,7 +2,7 @@
 
 namespace <?= $namespace; ?>;
 
-use App\Dto\DtoRequestInterface;
+use Fd\HslBundle\DtoRequestInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
