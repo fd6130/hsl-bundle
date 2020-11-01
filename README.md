@@ -23,12 +23,12 @@ Install this on your own risk ya.  :)
 **Protips:** Refer to suggest section in `composer.json` to see more useful tools.
 
 ## Documentation
---------------------
+
 Will update this soon.
 
 
 ## Command at a glance
-----------------------
+
 DTOs
 
 ```
