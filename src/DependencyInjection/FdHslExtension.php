@@ -19,5 +19,11 @@ class FdHslExtension extends Extension
         $container->registerForAutoconfiguration(TransformerAbstract::class)
             ->addTag('fd_hsl.transformer')
         ;
+
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+        
+        $paginatorDefinition = $container->getDefinition('fdhsl.pagination.paginator');
+        $paginatorDefinition->setArgument(2, $config['paginator']['default_limit']);
     }
 }
