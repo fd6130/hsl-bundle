@@ -13,26 +13,26 @@ class <?= $class_name ?> extends CustomMapper implements AutoMapperConfiguratorI
     /**
      * For use in across methods
      * 
-     * @var <?= $dto_short_class_name."\n" ?>
+     * @var <?= $dto_class_name."\n" ?>
      */
     private $source;
 
     /**
      * For use in across methods
      * 
-     * @var <?= $entity_short_class_name."\n" ?>
+     * @var <?= $entity_class_name."\n" ?>
      */
     private $destination;
 
     public function configure(AutoMapperConfigInterface $config): void
     {
-        $config->registerMapping(<?= $dto_short_class_name ?>::class, <?= $entity_short_class_name ?>::class)
+        $config->registerMapping(<?= $dto_class_name ?>::class, <?= $entity_class_name ?>::class)
             ->useCustomMapper($this);
     }
 
     /**
-     * @param <?= $dto_short_class_name ?> $source
-     * @param <?= $entity_short_class_name ?> $destination
+     * @param <?= $dto_class_name ?> $source
+     * @param <?= $entity_class_name ?> $destination
      */
     public function mapToObject($source, $destination)
     {

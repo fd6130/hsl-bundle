@@ -6,6 +6,7 @@ services:
   # maker-bundle
   maker.maker.make_hsl_dto:
     class: Fd\HslBundle\Maker\MakeHslDto
+    arguments: ['@maker.doctrine_helper']
     #tags: ["maker.command"]
   maker.maker.make_hsl_transformer:
     class: Fd\HslBundle\Maker\MakeHslTransformer

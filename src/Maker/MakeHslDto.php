@@ -6,12 +6,13 @@ use AutoMapperPlus\AutoMapperPlusBundle\AutoMapperConfiguratorInterface;
 use League\Fractal\TransformerAbstract;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
-use Symfony\Bundle\MakerBundle\EventRegistry;
+use Symfony\Bundle\MakerBundle\Doctrine\DoctrineHelper;
 use Symfony\Bundle\MakerBundle\Exception\RuntimeCommandException;
 use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
 use Symfony\Bundle\MakerBundle\Str;
+use Symfony\Bundle\MakerBundle\Util\ClassNameDetails;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -24,6 +25,12 @@ use SymfonyBundles\JsonRequestBundle\SymfonyBundlesJsonRequestBundle;
  */
 final class MakeHslDto extends AbstractMaker
 {
+    private $doctrineHelper;
+
+    public function __construct(DoctrineHelper $doctrineHelper)
+    {
+        $this->doctrineHelper = $doctrineHelper;
+    }
 
     public static function getCommandName(): string
     {
@@ -34,7 +41,7 @@ final class MakeHslDto extends AbstractMaker
     {
         $command
             ->setDescription('Creates a new dto input class')
-            ->addArgument('dto_name', InputArgument::OPTIONAL, 'Choose a class name for your dto (e.g. <fg=yellow>User</>)')
+            ->addArgument('entity-class', InputArgument::OPTIONAL, sprintf('The class name of the entity to create DTO (e.g. <fg=yellow>%s</>)', Str::asClassName(Str::getRandomTerm())))
             ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeHslDto.txt'))
         ;
 
@@ -48,38 +55,33 @@ final class MakeHslDto extends AbstractMaker
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator)
     {
-        $dtoClassNameDetails = $generator->createClassNameDetails(
-            $input->getArgument('dto_name'),
+        $entityClassDetails = $generator->createClassNameDetails(
+            Validator::entityExists($input->getArgument('entity-class'), $this->doctrineHelper->getEntitiesForAutocomplete()),
+            'Entity\\'
+        );
+
+        $dtoClassDetails = $generator->createClassNameDetails(
+            $entityClassDetails->getShortName(),
             'Dto\\Input\\',
             'Input'
         );
 
-        $this->generateDto($input, $io, $generator, $dtoClassNameDetails);
-        $this->generateCustomMapper($input, $io, $generator, $dtoClassNameDetails);
-
-        $generator->writeChanges();
-
-        $this->writeSuccessMessage($io);
-
-        $io->text([
-            'Next: Open your new dto input class and start customizing it.',
-            'Find the documentation at <fg=yellow>https://github.com/mark-gerarts/automapper-plus-bundle</>',
-        ]);
-    }
-
-    public function generateDto(InputInterface $input, ConsoleStyle $io, Generator $generator, $dtoClassNameDetails)
-    {
         $fieldArray = [];
         $addNewProperty = "first_property";
 
-        while(true)
+        do
         {
-            $addNewProperty = $io->ask('New property name (press <return> to stop adding fields)');
-            if(empty($addNewProperty))
-            {
-                break;
-            }
+            $addNewProperty = $io->ask('New property name (press <return> to stop adding fields)', null, function($answer) {
+                if(empty($answer))
+                {
+                    throw new RuntimeCommandException('This value cannot be blank.');
+                }
+
+                return $answer;
+            });
+
             $fieldName = Str::asLowerCamelCase($addNewProperty);
+
             if(in_array($fieldName, $fieldArray))
             {
                 $io->error(sprintf("The \"%s\" property already exists.", $fieldName));
@@ -101,70 +103,49 @@ final class MakeHslDto extends AbstractMaker
                 'name' => $fieldName,
                 'type' => $requestType
             ];
-        }
+        }while(empty($addNewProperty));
 
         // generate dto
         $generator->generateClass(
-            $dtoClassNameDetails->getFullName(),
+            $dtoClassDetails->getFullName(),
             __DIR__.'/../Resources/skeleton/dto/Dto.tpl.php',
             [
                 'fieldArray' => $fieldArray
             ]
         );
-    }
 
-    public function generateCustomMapper(InputInterface $input, ConsoleStyle $io, Generator $generator, $dtoClassNameDetails)
-    {
+        // ask if need custom mapper
         $customMapper = $io->confirm('Do you need custom mapper configuration?');
-
+        
         if($customMapper)
         {
             $mapperClassNameDetails = $generator->createClassNameDetails(
-                $input->getArgument('dto_name'),
+                $entityClassDetails->getShortName(),
                 'Dto\\Mapper\\',
                 'MapperConfig'
             );
-
-            $entityName = $io->ask('Which entity you gonna map with?', null, function($answer) {
-                if(empty($answer))
-                {
-                    throw new RuntimeCommandException('This value cannot be blank.');
-                }
-                
-                return $answer;
-            });
-            
-            $entityClassNameDetails = $generator->createClassNameDetails(
-                $entityName,
-                'Entity\\'
-            );
-
-            $entityClassExists = class_exists($entityClassNameDetails->getFullName());
-
-            while(!$entityClassExists)
-            {
-                $io->error(sprintf('Could not find entity \'%s\'', $entityClassNameDetails->getFullName()));
-                $entityClass = $io->ask('Which entity you gonna use for this transformer?');
-                $entityClassNameDetails = $generator->createClassNameDetails(
-                    $entityClass,
-                    'Entity\\'
-                );
-
-                $entityClassExists = class_exists($entityClassNameDetails->getFullName());
-            }
 
             // generate mapper config
             $generator->generateClass(
                 $mapperClassNameDetails->getFullName(),
                 __DIR__.'/../Resources/skeleton/dto/Mapper.tpl.php',
                 [
-                    'dto_short_class_name' => $dtoClassNameDetails->getShortName(),
-                    'dto_full_class_name' => $dtoClassNameDetails->getFullName(),
-                    'entity_short_class_name' => $entityClassNameDetails->getShortName(),
-                    'entity_full_class_name' => $entityClassNameDetails->getFullName(),
+                    'dto_class_name' => $dtoClassDetails->getShortName(),
+                    'dto_full_class_name' => $dtoClassDetails->getFullName(),
+                    'entity_class_name' => $entityClassDetails->getShortName(),
+                    'entity_full_class_name' => $entityClassDetails->getFullName(),
                 ]
             );
         }
+
+        $generator->writeChanges();
+
+        $this->writeSuccessMessage($io);
+
+        $io->text([
+            'Next: Open your new dto input class and start customizing it.',
+            'Find the documentation at <fg=yellow>https://github.com/mark-gerarts/automapper-plus-bundle</>',
+        ]);
     }
 
     public function configureDependencies(DependencyBuilder $dependencies)
