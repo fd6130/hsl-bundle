@@ -11,7 +11,7 @@ hsl-bundle provide you some nice feature that you might / might not needed:
 
 Please do take note that all the feature from this bundle are using my preference way / format because the purpose of this bundle is used to ease the development of my project.
 
-Install this on your own risk ya.  :)
+If you need this bundle features but you have your own prefence way / format for your projects, just fork and modify it!
 
 **This bundle has nothing related with Discrete Maths. The words 'HSL' is a meme from our 17-B students in Discrete Maths course.**
 
@@ -21,6 +21,12 @@ Install this on your own risk ya.  :)
 1. Symfony 5 or above
 
 **Protips:** Refer to suggest section in `composer.json` to see more useful tools.
+
+## Installation
+
+```
+composer require "fd6130/hsl-bundle"
+```
 
 ## Documentation
 
@@ -53,3 +59,10 @@ Lexik RSA Keys (require LexikJWTAuthenticationBundle)
 php bin/console lexik:generate-keys
 ```
 
+## Credits
+
+[fd6130](https://github.com/fd6130)
+
+## License
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
