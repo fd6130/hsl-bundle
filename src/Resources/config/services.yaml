@@ -35,10 +35,16 @@ services:
     tags:
       - { name: kernel.event_listener, event: vich_uploader.post_upload }
 
+  # paginator
+  fdhsl.pagination.paginator:
+    class: Fd\HslBundle\Pagination\Paginator
+
+  Fd\HslBundle\Pagination\PaginatorInterface: '@fdhsl.pagination.paginator'
+
   # pagination services
-  Fd\HslBundle\Pagination\PaginationManager:
+  # Fd\HslBundle\Pagination\PaginationManager:
     #arguments: ["@service_container"]
   
-  Fd\HslBundle\Pagination\DoctrineQueryBuilderPagination:
+  # Fd\HslBundle\Pagination\DoctrineQueryBuilderPagination:
     #public: true
     #arguments: ["@router", "@request_stack"]
