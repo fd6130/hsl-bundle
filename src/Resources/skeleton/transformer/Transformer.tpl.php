@@ -31,7 +31,7 @@ class <?= $class_name ?> extends TransformerAbstract
      * Add whatever properties & methods you need to hold the
      * data for this message class.
      */
-    public function transform(<?= $entity_short_class_name ?> $<?= $entity_variable_name ?>): ?array
+    public function transform(<?= $entity_class_name ?> $<?= $entity_variable_name ?>): ?array
     {
         // Decorate your return data in array form.
         return [

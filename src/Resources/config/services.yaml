@@ -9,6 +9,7 @@ services:
     #tags: ["maker.command"]
   maker.maker.make_hsl_transformer:
     class: Fd\HslBundle\Maker\MakeHslTransformer
+    arguments: ['@maker.doctrine_helper']
   maker.maker.make_hsl_crud:
     class: Fd\HslBundle\Maker\MakeHslCrud
     arguments: ['@maker.doctrine_helper']

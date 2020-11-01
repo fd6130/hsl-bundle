@@ -15,6 +15,7 @@ use App\FractalTrait;
 use League\Fractal\TransformerAbstract;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
+use Symfony\Bundle\MakerBundle\Doctrine\DoctrineHelper;
 use Symfony\Bundle\MakerBundle\Exception\RuntimeCommandException;
 use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
@@ -31,6 +32,12 @@ use Symfony\Component\Console\Question\Question;
  */
 final class MakeHslTransformer extends AbstractMaker
 {
+    private $doctrineHelper;
+
+    public function __construct(DoctrineHelper $doctrineHelper)
+    {
+        $this->doctrineHelper = $doctrineHelper;
+    }
 
     public static function getCommandName(): string
     {
@@ -41,8 +48,7 @@ final class MakeHslTransformer extends AbstractMaker
     {
         $command
             ->setDescription('Creates a new transformer class')
-            ->addArgument('transformer_name', InputArgument::OPTIONAL, 'Choose a class name for your transformer (e.g. <fg=yellow>ExampleTransformer</>)')
-            ->addArgument('entity_name', InputArgument::OPTIONAL, 'Which entity you gonna use for this transformer?')
+            ->addArgument('entity-class', InputArgument::OPTIONAL, sprintf('The class name of the entity to create Transformer (e.g. <fg=yellow>%s</>)', Str::asClassName(Str::getRandomTerm())))
             ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeHslTransformer.txt'))
         ;
 
@@ -56,40 +62,24 @@ final class MakeHslTransformer extends AbstractMaker
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator)
     {
-        $transformerClassNameDetails = $generator->createClassNameDetails(
-            $input->getArgument('transformer_name'),
+        $entityClassDetails = $generator->createClassNameDetails(
+            Validator::entityExists($input->getArgument('entity-class'), $this->doctrineHelper->getEntitiesForAutocomplete()),
+            'Entity\\'
+        );
+
+        $transformerClassDetails = $generator->createClassNameDetails(
+            $entityClassDetails->getShortName(),
             'Transformer\\',
             'Transformer'
         );
 
-        $entityClassNameDetails = $generator->createClassNameDetails(
-            $input->getArgument('entity_name'),
-            'Entity\\'
-        );
-
-        $entityClassExists = class_exists($entityClassNameDetails->getFullName());
-
-        while(!$entityClassExists)
-        {
-            $io->error(sprintf('Could not find entity \'%s\'', $entityClassNameDetails->getFullName()));
-            $entityClass = $io->ask('Which entity you gonna use for this transformer?');
-            $entityClassNameDetails = $generator->createClassNameDetails(
-                $entityClass,
-                'Entity\\'
-            );
-
-            $entityClassExists = class_exists($entityClassNameDetails->getFullName());
-        }
-
-        $entityVariableName = Str::asLowerCamelCase($input->getArgument('entity_name'));
-
         $generator->generateClass(
-            $transformerClassNameDetails->getFullName(),
+            $transformerClassDetails->getFullName(),
             __DIR__.'/../Resources/skeleton/transformer/Transformer.tpl.php',
             [
-                'entity_short_class_name' => $entityClassNameDetails->getShortName(),
-                'entity_variable_name' => Str::asLowerCamelCase($entityClassNameDetails->getShortName()),
-                'entity_full_class_name' => $entityClassNameDetails->getFullName(),
+                'entity_class_name' => $entityClassDetails->getShortName(),
+                'entity_variable_name' => Str::asLowerCamelCase($entityClassDetails->getShortName()),
+                'entity_full_class_name' => $entityClassDetails->getFullName(),
             ]
         );
 
