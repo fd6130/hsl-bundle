@@ -13,7 +13,7 @@ Please do take note that all the feature from this bundle are using my preferenc
 
 If you need this bundle features but you have your own prefence way / format for your projects, just fork and modify it!
 
-**This bundle has nothing related with Discrete Maths. The words 'HSL' is a meme from our 17-B students in Discrete Maths course.**
+**The words 'HSL' is a meme from our 17-B students in Discrete Maths course.**
 
 ## Prerequisites
 
