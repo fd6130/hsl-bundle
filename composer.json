@@ -1,7 +1,7 @@
 {
     "name": "fd6130/hsl-bundle",
-    "description": "This bundle has nothing related with Discrete Maths. The words 'HSL' is a meme from our 17-B students in Discrete Maths course.",
-    "type": "library",
+    "description": "This bundle provide some ease of development for Symfony beginner.",
+    "type": "symfony-bundle",
     "license": "MIT",
     "autoload": {
         "psr-4": {
