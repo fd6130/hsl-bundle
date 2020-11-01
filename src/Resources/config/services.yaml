@@ -31,7 +31,7 @@ services:
       - { name: "controller.argument_value_resolver", priority: 50 }
 
   # Vich Uploader event
-  Fd\HslBundle\Event\Listener\VichImageUploadListener:
+  Fd\HslBundle\Event\Listener\HslImageUploadListener:
     tags:
       - { name: kernel.event_listener, event: vich_uploader.post_upload }
 

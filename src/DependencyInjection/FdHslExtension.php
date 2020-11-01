@@ -23,6 +23,7 @@ class FdHslExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         
+        dd($config);
         $paginatorDefinition = $container->getDefinition('fdhsl.pagination.paginator');
         $paginatorDefinition->setArgument(2, $config['paginator']['default_limit']);
     }

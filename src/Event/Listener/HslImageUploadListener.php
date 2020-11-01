@@ -7,12 +7,13 @@ use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Event\Event;
 
 /**
- * Custom listener that modify an image after post.
+ * Custom listener that modify an image after upload.
  */
-class VichImageUploadListener
+class HslImageUploadListener
 {
-    const MAX_WIDTH = 800;
-    const MAX_BYTE = 1000000; // equal to 1MB
+    const MAX_ALLOWED_WIDTH = 1024;
+    const MAX_ALLOWED_SIZE = 1000000; // equal to 1MB
+    const DEFAULT_QUALITY = 90;
 
     /**
      * @var ImageManager $imageManager
