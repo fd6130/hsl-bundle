@@ -7,7 +7,7 @@ use <?= $dto_full_class_name ?>;
 use <?= $entity_full_class_name ?>;
 use <?= $transformer_full_class_name ?>;
 use Fd\HslBundle\FractalTrait;
-use Fd\HslBundle\Pagination\PaginationManager;
+use Fd\HslBundle\Pagination\PaginatorInterface;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -35,12 +35,12 @@ class <?= $class_name ?> extends <?= $parent_class_name; ?><?= "\n" ?>
     }
 
     /**
-     * @Route("/", name="<?= $route_name ?>_collection", methods={"GET"})
+     * @Route("", name="<?= $route_name ?>_collection", methods={"GET"})
      */
 <?php if (isset($repository_full_class_name)): ?>
-    public function collection(Request $request, <?= $repository_class_name ?> $<?= $repository_var ?>, PaginationManager $pagination): Response
+    public function collection(Request $request, <?= $repository_class_name ?> $<?= $repository_var ?>, PaginatorInterface $pagination): Response
     {
-        $data = $pagination->getQueryBuilderPagination()->paginate($<?= $repository_var ?>->findByQB(), <?= $transformer_class_name ?>::class);
+        $data = $pagination->paginate($<?= $repository_var ?>->findByQB(), <?= $transformer_class_name ?>::class);
         
         return $this->json($this->fractal($request)->createData($data)->toArray());
     }
@@ -58,7 +58,7 @@ class <?= $class_name ?> extends <?= $parent_class_name; ?><?= "\n" ?>
 <?php endif ?>
 
     /**
-     * @Route("/", name="<?= $route_name ?>_create", methods={"POST"})
+     * @Route("", name="<?= $route_name ?>_create", methods={"POST"})
      */
     public function create(<?= $dto_class_name ?> $dto)
     {
@@ -68,11 +68,11 @@ class <?= $class_name ?> extends <?= $parent_class_name; ?><?= "\n" ?>
         $entityManager->persist($<?= $entity_var_singular ?>);
         $entityManager->flush();
 
-        $this->json(['id' => $<?= $entity_var_singular ?>->getId()], 201);
+        return $this->json(['id' => $<?= $entity_var_singular ?>->getId()], 201);
     }
 
     /**
-     * @Route("/{<?= $entity_identifier ?>}", name="<?= $route_name ?>_item", methods={"GET"}, requirements={"<? $entity_identifier ?>"="\d+"})
+     * @Route("/{<?= $entity_identifier ?>}", name="<?= $route_name ?>_item", methods={"GET"}, requirements={"<?= $entity_identifier ?>"="\d+"})
      */
     public function item(<?= $entity_class_name ?> $<?= $entity_var_singular ?>, Request $request): Response
     {
@@ -82,7 +82,7 @@ class <?= $class_name ?> extends <?= $parent_class_name; ?><?= "\n" ?>
     }
 
     /**
-     * @Route("/{<?= $entity_identifier ?>}", name="<?= $route_name ?>_update", methods={"PUT"}, requirements={"<? $entity_identifier ?>"="\d+"})
+     * @Route("/{<?= $entity_identifier ?>}", name="<?= $route_name ?>_update", methods={"PUT"}, requirements={"<?= $entity_identifier ?>"="\d+"})
      */
     public function update(<?= $entity_class_name ?> $<?= $entity_var_singular ?>, <?= $dto_class_name ?> $dto): Response
     {
@@ -95,7 +95,7 @@ class <?= $class_name ?> extends <?= $parent_class_name; ?><?= "\n" ?>
     }
 
     /**
-     * @Route("/{<?= $entity_identifier ?>}", name="<?= $route_name ?>_delete", methods={"DELETE"}, requirements={"<? $entity_identifier ?>"="\d+"})
+     * @Route("/{<?= $entity_identifier ?>}", name="<?= $route_name ?>_delete", methods={"DELETE"}, requirements={"<?= $entity_identifier ?>"="\d+"})
      */
     public function delete(<?= $entity_class_name ?> $<?= $entity_var_singular ?>): Response
     {
