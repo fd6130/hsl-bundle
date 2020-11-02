@@ -2,6 +2,7 @@
 
 namespace Fd\HslBundle\DependencyInjection;
 
+use Fd\HslBundle\Event\Listener\HslImageUploadListener;
 use Fd\HslBundle\HslInterface;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\Config\FileLocator;
@@ -23,8 +24,10 @@ class FdHslExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         
-        dd($config);
         $paginatorDefinition = $container->getDefinition('fdhsl.pagination.paginator');
         $paginatorDefinition->setArgument(2, $config['paginator']['default_limit']);
+
+        $hslImageUpload = $container->getDefinition(HslImageUploadListener::class);
+        $hslImageUpload->setArgument(0, $config['hsl_image_upload_listener']);
     }
 }

@@ -3,6 +3,7 @@
 namespace Fd\HslBundle\Event\Listener;
 
 use Intervention\Image\ImageManager;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Event\Event;
 
@@ -11,21 +12,34 @@ use Vich\UploaderBundle\Event\Event;
  */
 class HslImageUploadListener
 {
-    const MAX_ALLOWED_WIDTH = 1024;
-    const MAX_ALLOWED_SIZE = 1000000; // equal to 1MB
+    const DEFAULT_RESIZE_WHEN_WIDTH_EXCEED = 1024;
+    const DEFAULT_RESIZE_TO_WIDTH = 1024;
     const DEFAULT_QUALITY = 90;
 
+    private $config;
     /**
      * @var ImageManager $imageManager
      */
     private $imageManager;
 
-    public function __construct()
+    /**
+     * @param array $config config value from 'fd_hsl.yaml'
+     */
+    public function __construct(array $config)
     {
+        $this->config = $config;
         $this->imageManager = new ImageManager(array('driver' => 'gd'));
     }
 
     public function onVichUploaderPostUpload(Event $event){
+        
+        // return when enable: false
+        if($this->config['enable'] === false)
+        {
+            return;
+        }
+        
+        
         $object = $event->getObject();
         $mapping = $event->getMapping();
 
@@ -34,11 +48,6 @@ class HslImageUploadListener
          */
         $image = $object->getImageFile();
         
-        if($this->isNotEligibleForResave($image))
-        {
-            return;
-        }
-        
         list($oriWidth, $oriHeight) = getimagesize($image->getPathname());
         $path = $image->getPath();
         $filename = pathinfo($image->getFileName(), PATHINFO_FILENAME);
@@ -46,17 +55,23 @@ class HslImageUploadListener
 
         $imageManager = $this->imageManager->make($image->getPathname());
 
-        if($this->isExceedMaxWidth($oriWidth))
+        // Resize image if enable: true
+        if($this->config['resize']['enable'] === true)
         {
-            $height = round( (self::MAX_WIDTH * $oriHeight) / $oriWidth);
-            $imageManager = $imageManager->resize(self::MAX_WIDTH, $height);
+            if($oriWidth <= $this->config['resize']['resize_when_width_exceed'])
+            {
+                return; // do nothing
+            }
+
+            $height = round( ($this->config['resize']['resize_to_width'] * $oriHeight) / $oriWidth);
+            $imageManager = $imageManager->resize($this->config['resize']['resize_to_width'], $height);
         }
 
-        
-        if($this->notJPGExtension($image))
+        // Make sure you save this file as image extension, otherwise the file will break.
+        if($this->config['save_as_extension'] !== null)
         {
-            $saveFilePath = $path.'/'.$filename. '.jpg';
-            $newFilename = $filename. '.jpg';
+            $saveFilePath = $path.'/'.$filename. '.' . $this->config['save_as_extension'];
+            $newFilename = $filename. '.' .$this->config['save_as_extension'];
 
             /**
              * 1. Delete original uploaded file because it won't replace the original image with
@@ -68,21 +83,6 @@ class HslImageUploadListener
             $object->setImageName($newFilename);
         }
         
-        $imageManager->save($saveFilePath, 90);
-    }
-
-    private function notJPGExtension($image)
-    {
-        return $image->getExtension() !== 'jpg';
-    }
-
-    private function isExceedMaxWidth($imageWidth)
-    {
-        return $imageWidth > self::MAX_WIDTH;
-    }
-
-    private function isNotEligibleForResave(File $image)
-    {
-        return filesize($image->getPathname()) < self::MAX_BYTE && !$this->notJPGExtension($image);
+        $imageManager->save($saveFilePath, $this->config['quality']);
     }
 }
