@@ -89,11 +89,11 @@ final class MakeHslDto extends AbstractMaker
                 
             }
 
-            $requestType = $io->ask('Is this JSON or Form request? (json/form)', 'json', function($value) {
+            $requestType = $io->ask('Is this JSON or Form request? (json/form/file)', 'json', function($value) {
 
-                if(strtolower($value) !== 'json' && strtolower($value) !== 'form')
+                if(strtolower($value) !== 'json' && strtolower($value) !== 'form' && strtolower($value) !== 'file')
                 {
-                    throw new RuntimeCommandException('Value must be \'json\' or \'form\'');
+                    throw new RuntimeCommandException("Value must be 'json', 'form' or 'file'");
                 }
 
                 return $value;
