@@ -67,19 +67,10 @@ final class MakeHslDto extends AbstractMaker
         );
 
         $fieldArray = [];
-        $addNewProperty = "first_property";
+        $addNewProperty = $io->ask('New property name (press <return> to stop adding fields)');
 
-        do
+        while(!empty($addNewProperty))
         {
-            $addNewProperty = $io->ask('New property name (press <return> to stop adding fields)', null, function($answer) {
-                if(empty($answer))
-                {
-                    throw new RuntimeCommandException('This value cannot be blank.');
-                }
-
-                return $answer;
-            });
-
             $fieldName = Str::asLowerCamelCase($addNewProperty);
 
             if(in_array($fieldName, $fieldArray))
@@ -103,7 +94,9 @@ final class MakeHslDto extends AbstractMaker
                 'name' => $fieldName,
                 'type' => $requestType
             ];
-        }while(empty($addNewProperty));
+
+            $addNewProperty = $io->ask('New property name (press <return> to stop adding fields)');
+        }
 
         // generate dto
         $generator->generateClass(
