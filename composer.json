@@ -29,6 +29,7 @@
         "twig/cssinliner-extra": "For email css",
         "twig/extra-bundle": "For email css",
         "twig/inky-extra": "For email css",
-        "nesbot/carbon": "Easy format your datetime"
+        "nesbot/carbon": "Easy format your datetime",
+        "nelmio/cors-bundle": "CORS management"
     }
 }
