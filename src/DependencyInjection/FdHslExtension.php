@@ -3,7 +3,6 @@
 namespace Fd\HslBundle\DependencyInjection;
 
 use Fd\HslBundle\Event\Listener\HslImageUploadListener;
-use Fd\HslBundle\HslInterface;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
