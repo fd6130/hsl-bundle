@@ -43,7 +43,7 @@ class Paginator implements PaginatorInterface
         {
             $adapter = new QueryAdapter($result);
         }
-        elseif(is_array($result))
+        else
         {
             $adapter = new ArrayAdapter($result);
         }
