@@ -6,7 +6,7 @@ use AutoMapperPlus\AutoMapperInterface;
 use <?= $dto_full_class_name ?>;
 use <?= $entity_full_class_name ?>;
 use <?= $transformer_full_class_name ?>;
-use Fd\HslBundle\FractalTrait;
+use Fd\HslBundle\Fractal\FractalTrait;
 use Fd\HslBundle\Pagination\PaginatorInterface;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
