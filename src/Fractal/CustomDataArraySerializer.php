@@ -4,28 +4,36 @@ namespace Fd\HslBundle\Fractal;
 
 use League\Fractal\Serializer\DataArraySerializer;
 
-/**
- * To remove "data" on item and null resource.
- */
 class CustomDataArraySerializer extends DataArraySerializer
 {
     /**
-     * Serialize an item.
-     *
-     * @param string $resourceKey
-     * @param array  $data
-     *
-     * @return array
+     * @inheritdoc
      */
-    public function item($resourceKey, array $data)
+    public function collection($resourceKey, array $data)
     {
+        if($resourceKey)
+        {
+            return [$resourceKey => $data];
+        }
+
         return $data;
     }
 
     /**
-     * Serialize null resource.
-     *
-     * @return array
+     * @inheritdoc
+     */
+    public function item($resourceKey, array $data)
+    {
+        if($resourceKey)
+        {
+            return [$resourceKey => $data];
+        }
+
+        return $data;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function null()
     {
