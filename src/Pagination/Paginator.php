@@ -36,9 +36,6 @@ class Paginator implements PaginatorInterface
         $page = $request->query->getInt('page', 1);
         $limitPerPage = $request->query->getInt('limit', $this->limit);
 
-        // if ($request->query->has('include')) {
-        //     $this->fractalManager->parseIncludes($request->query->get('include'));
-        // }
         if($result instanceof QueryBuilder)
         {
             $adapter = new QueryAdapter($result);
@@ -63,7 +60,7 @@ class Paginator implements PaginatorInterface
             return $this->router->generate($route, $newParams, UrlGeneratorInterface::ABSOLUTE_URL);
         });
 
-        $resource = new Collection($pagerfanta->getCurrentPageResults(), $transformer);
+        $resource = new Collection($pagerfanta->getCurrentPageResults(), $transformer, 'data');
         $resource->setPaginator($paginatorAdapter);
         
         return $resource;
