@@ -4,6 +4,8 @@ namespace <?= $namespace; ?>;
 
 use League\Fractal\TransformerAbstract;
 use <?= $entity_full_class_name ?>;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
 
 /**
  * Transformer are use to decorate your custom output data before serialize it to JSON.
@@ -31,22 +33,22 @@ class <?= $class_name ?> extends TransformerAbstract
      * Add whatever properties & methods you need to hold the
      * data for this message class.
      */
-    public function transform(<?= $entity_class_name ?> $<?= $entity_variable_name ?>): ?array
+    public function transform(?<?= $entity_class_name ?> $<?= $entity_variable_name ?>): ?array
     {
         // Decorate your return data in array form.
-        return [
+        return $<?= $entity_variable_name ?> ? [
             'id' => $<?= $entity_variable_name ?>->getId(),
-        ];
+        ] : $this->null();
     }
 
     /**
      * Write this function if you have declare something in $availableIncludes or $defaultIncludes
      *
-     * Example: If you include 'user', the method name and its parameter will be 'public function includeUser(User $user)'
+     * Example: If you include 'user', the method name and its parameter will be 'public function includeUser()'
      */
-//   public function includeExample(/** entity class */)
+//   public function includeExample(?<?= $entity_class_name ?> $<?= $entity_variable_name ?>)
 //   {
-//       return $this->item(/** entity class */, /** transformer class */);
+//       return $<?= $entity_variable_name ?>->getterMethod() ? $this->item($<?= $entity_variable_name ?>->getterMethod(), /** transformer class */) : $this->null();
 //   }
 
 }

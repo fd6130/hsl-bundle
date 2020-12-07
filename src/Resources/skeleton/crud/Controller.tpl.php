@@ -40,7 +40,7 @@ class <?= $class_name ?> extends <?= $parent_class_name; ?><?= "\n" ?>
 <?php if (isset($repository_full_class_name)): ?>
     public function collection(Request $request, <?= $repository_class_name ?> $<?= $repository_var ?>, PaginatorInterface $pagination): Response
     {
-        $data = $pagination->paginate($<?= $repository_var ?>->findByQB(), <?= $transformer_class_name ?>::class);
+        $data = $pagination->paginate($<?= $repository_var ?>->createQueryBuilder('qb'), <?= $transformer_class_name ?>::class);
         
         return $this->json($this->fractal($request)->createData($data)->toArray());
     }

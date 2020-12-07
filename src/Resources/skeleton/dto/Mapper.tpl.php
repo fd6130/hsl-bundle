@@ -7,6 +7,7 @@ use <?= $entity_full_class_name ?>;
 use AutoMapperPlus\AutoMapperPlusBundle\AutoMapperConfiguratorInterface;
 use AutoMapperPlus\Configuration\AutoMapperConfigInterface;
 use AutoMapperPlus\CustomMapper\CustomMapper;
+use Doctrine\ORM\EntityManagerInterface;
 
 class <?= $class_name ?> extends CustomMapper implements AutoMapperConfiguratorInterface
 {
@@ -23,6 +24,13 @@ class <?= $class_name ?> extends CustomMapper implements AutoMapperConfiguratorI
      * @var <?= $entity_class_name."\n" ?>
      */
     private $destination;
+
+    //private $entityManager;
+
+    //public function __construct(EntityManagerInterface $entityManager)
+    //{
+    //    $this->entityManager = $entityManager;
+    //}
 
     public function configure(AutoMapperConfigInterface $config): void
     {
