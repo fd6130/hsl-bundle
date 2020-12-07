@@ -37,6 +37,6 @@ class CustomDataArraySerializer extends DataArraySerializer
      */
     public function null()
     {
-        return [];
+        return null;
     }
 }
