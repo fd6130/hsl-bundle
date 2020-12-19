@@ -38,7 +38,7 @@ class <?= $class_name ?> extends TransformerAbstract
         // Decorate your return data in array form.
         return $<?= $entity_variable_name ?> ? [
             'id' => $<?= $entity_variable_name ?>->getId(),
-        ] : [];
+        ] : null;
     }
 
     /**
