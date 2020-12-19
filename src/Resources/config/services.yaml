@@ -1,19 +1,19 @@
 services:
   _defaults:
-    autowire: true      # Automatically injects dependencies in your services.
+    autowire: true # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
   # maker-bundle
   maker.maker.make_hsl_dto:
     class: Fd\HslBundle\Maker\MakeHslDto
-    arguments: ['@maker.doctrine_helper']
+    arguments: ["@maker.doctrine_helper"]
     #tags: ["maker.command"]
   maker.maker.make_hsl_transformer:
     class: Fd\HslBundle\Maker\MakeHslTransformer
-    arguments: ['@maker.doctrine_helper']
+    arguments: ["@maker.doctrine_helper"]
   maker.maker.make_hsl_crud:
     class: Fd\HslBundle\Maker\MakeHslCrud
-    arguments: ['@maker.doctrine_helper']
+    arguments: ["@maker.doctrine_helper"]
 
   Fd\HslBundle\Command\LexikJWTKeyGeneratorCommand:
     tags: ["console.command"]
@@ -39,12 +39,9 @@ services:
   fdhsl.pagination.paginator:
     class: Fd\HslBundle\Pagination\Paginator
 
-  Fd\HslBundle\Pagination\PaginatorInterface: '@fdhsl.pagination.paginator'
+  Fd\HslBundle\Pagination\PaginatorInterface: "@fdhsl.pagination.paginator"
 
-  # pagination services
-  # Fd\HslBundle\Pagination\PaginationManager:
-    #arguments: ["@service_container"]
-  
-  # Fd\HslBundle\Pagination\DoctrineQueryBuilderPagination:
-    #public: true
-    #arguments: ["@router", "@request_stack"]
+  # JsonResponseException
+  Fd\HslBundle\Event\Listener\JsonResponseExceptionListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.exception }

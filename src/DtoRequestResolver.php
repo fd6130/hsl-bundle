@@ -2,6 +2,7 @@
 
 namespace Fd\HslBundle;
 
+use Fd\HslBundle\Exception\JsonResponseException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
@@ -52,7 +53,7 @@ class DtoRequestResolver implements ArgumentValueResolverInterface
         $errors = $this->validator->validate($dto);
         if(count($errors) > 0)
         {
-            throw new BadRequestException((string) $errors);
+            throw new JsonResponseException('BAD REQUEST', (string) $errors, 400);
         }
 
         yield $dto;
