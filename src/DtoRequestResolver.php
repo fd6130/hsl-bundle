@@ -51,9 +51,16 @@ class DtoRequestResolver implements ArgumentValueResolverInterface
 
         //do symfony validation here
         $errors = $this->validator->validate($dto);
+        
         if(count($errors) > 0)
         {
-            throw new JsonResponseException('BAD REQUEST', (string) $errors, 400);
+            $errorMessages = [];
+
+            foreach($errors as $error)
+            {
+                $errorMessages [] = $error->getPropertyPath() . ' => ' . $error->getMessage();
+            }
+            throw new JsonResponseException('BAD REQUEST', $errorMessages, 400);
         }
 
         yield $dto;

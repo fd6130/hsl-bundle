@@ -14,6 +14,7 @@ class JsonResponseException extends HttpException
     public function __construct($errorType = null, $message = null, int $statusCode = 400)
     {
         $response = [
+            'code' => $statusCode,
             'errorType' => $errorType,
             'message' => $message
         ];
