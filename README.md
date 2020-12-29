@@ -12,7 +12,7 @@ hsl-bundle provide you some nice feature that you might / might not needed:
 ## Prerequisites
 
 1. PHP 7.2 or above
-1. Full set of Symfony 4.4 / 5 (symfony new --full)
+1. Symfony 4.4 / 5 (symfony new --full)
 
 **Protips:** Refer to suggest section in `composer.json` to see more useful tools.
 
@@ -54,6 +54,8 @@ Will update this soon.
 
 
 ## Command at a glance
+
+**Append --help at the end of the command for more options. For example `php bin/console make:hsl:dto --help`**
 
 DTOs
 

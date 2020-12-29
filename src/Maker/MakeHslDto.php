@@ -17,6 +17,7 @@ use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\Question;
 use SymfonyBundles\JsonRequestBundle\SymfonyBundlesJsonRequestBundle;
 
@@ -25,6 +26,8 @@ use SymfonyBundles\JsonRequestBundle\SymfonyBundlesJsonRequestBundle;
  */
 final class MakeHslDto extends AbstractMaker
 {
+    use MakerTrait;
+
     private $doctrineHelper;
 
     public function __construct(DoctrineHelper $doctrineHelper)
@@ -41,97 +44,66 @@ final class MakeHslDto extends AbstractMaker
     {
         $command
             ->setDescription('Creates a new dto input class')
-            ->addArgument('entity-class', InputArgument::OPTIONAL, sprintf('The class name of the entity to create DTO (e.g. <fg=yellow>%s</>)', Str::asClassName(Str::getRandomTerm())))
-            ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeHslDto.txt'))
-        ;
+            ->addArgument('class-name', InputArgument::OPTIONAL, sprintf('The class name of dto (e.g. <fg=yellow>%s</>)', Str::asClassName(Str::getRandomTerm())))
+            ->addOption('generate-mapper', null, InputOption::VALUE_NONE, 'Simply generate a mapper for existing dto')
+            ->setHelp(file_get_contents(__DIR__ . '/../Resources/help/MakeHslDto.txt'));
 
-        //$inputConf->setArgumentAsNonInteractive('event');
+        $inputConf->setArgumentAsNonInteractive('class-name');
     }
 
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command)
     {
-        
+        $argument = $command->getDefinition()->getArgument('class-name');
+
+        if ($input->getOption('generate-mapper')) {
+            $io->block([
+                'Note: You have choose to generate a mapper for existing dto.',
+            ], null, 'fg=yellow');
+            $value = $io->ask($argument->getDescription(), null, [Validator::class, 'notBlank']);
+            $input->setArgument('class-name', $value);
+        }
+        else
+        {
+            $argument = $command->getDefinition()->getArgument('class-name');
+            $value = $io->ask($argument->getDescription(), null, [Validator::class, 'notBlank']);
+            $input->setArgument('class-name', $value);
+        }
     }
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator)
     {
-        $entityClassDetails = $generator->createClassNameDetails(
-            Validator::entityExists($input->getArgument('entity-class'), $this->doctrineHelper->getEntitiesForAutocomplete()),
-            'Entity\\'
-        );
+        $generateMapper = $input->getOption('generate-mapper');
+        $classname = Str::asClassName($input->getArgument('class-name'));
 
         $dtoClassDetails = $generator->createClassNameDetails(
-            $entityClassDetails->getShortName(),
+            $classname,
             'Dto\\Input\\',
             'Input'
         );
 
-        $fieldArray = [];
-        $addNewProperty = $io->ask('New property name (press <return> to stop adding fields)');
-
-        while(!empty($addNewProperty))
-        {
-            $fieldName = Str::asLowerCamelCase($addNewProperty);
-
-            if(in_array($fieldName, $fieldArray))
-            {
-                $io->error(sprintf("The \"%s\" property already exists.", $fieldName));
-                continue;
-                
-            }
-
-            $requestType = $io->ask('Is this JSON or Form request? (json/form/file)', 'json', function($value) {
-
-                if(strtolower($value) !== 'json' && strtolower($value) !== 'form' && strtolower($value) !== 'file')
-                {
-                    throw new RuntimeCommandException("Value must be 'json', 'form' or 'file'");
-                }
-
-                return $value;
-            });
-
-            $fieldArray [] = [
-                'name' => $fieldName,
-                'type' => $requestType
-            ];
-
-            $addNewProperty = $io->ask('New property name (press <return> to stop adding fields)');
+        if (!$generateMapper && class_exists($dtoClassDetails->getFullName())) {
+            throw new RuntimeCommandException(sprintf("The class \"%s\" already exists.", $dtoClassDetails->getFullName()));
         }
 
-        // generate dto
-        $generator->generateClass(
-            $dtoClassDetails->getFullName(),
-            __DIR__.'/../Resources/skeleton/dto/Dto.tpl.php',
-            [
-                'fieldArray' => $fieldArray
-            ]
-        );
+        // if only to generate a mapper, skip the rest of the code after generate.
+        if ($generateMapper) {
+
+            if (!class_exists($dtoClassDetails->getFullName())) {
+                throw new RuntimeCommandException(sprintf("You must create a DTO (make:hsl:dto) first."));
+            }
+
+            $this->generateMapper($classname, $dtoClassDetails, $io, $generator);
+            return;
+        }
+
+        $this->generateDto($dtoClassDetails, $io, $generator);
 
         // ask if need custom mapper
         $customMapper = $io->confirm('Do you need custom mapper configuration?');
-        
-        if($customMapper)
-        {
-            $mapperClassNameDetails = $generator->createClassNameDetails(
-                $entityClassDetails->getShortName(),
-                'Dto\\Mapper\\',
-                'MapperConfig'
-            );
 
-            // generate mapper config
-            $generator->generateClass(
-                $mapperClassNameDetails->getFullName(),
-                __DIR__.'/../Resources/skeleton/dto/Mapper.tpl.php',
-                [
-                    'dto_class_name' => $dtoClassDetails->getShortName(),
-                    'dto_full_class_name' => $dtoClassDetails->getFullName(),
-                    'entity_class_name' => $entityClassDetails->getShortName(),
-                    'entity_full_class_name' => $entityClassDetails->getFullName(),
-                ]
-            );
+        if ($customMapper) {
+            $this->generateMapper($classname, $dtoClassDetails, $io, $generator);
         }
-
-        $generator->writeChanges();
 
         $this->writeSuccessMessage($io);
 
@@ -143,7 +115,79 @@ final class MakeHslDto extends AbstractMaker
 
     public function configureDependencies(DependencyBuilder $dependencies)
     {
-        $dependencies->addClassDependency(SymfonyBundlesJsonRequestBundle::class,'symfony-bundles/json-request-bundle');
+        $dependencies->addClassDependency(SymfonyBundlesJsonRequestBundle::class, 'symfony-bundles/json-request-bundle');
         $dependencies->addClassDependency(AutoMapperConfiguratorInterface::class, 'mark-gerarts/automapper-plus-bundle');
+    }
+
+    private function generateDto($dtoClassDetails, ConsoleStyle $io, Generator $generator)
+    {
+        $fieldArray = [];
+        $addNewProperty = $io->ask('New property name (press <return> to stop adding fields)');
+
+        while (!empty($addNewProperty)) {
+            $fieldName = Str::asLowerCamelCase($addNewProperty);
+
+            if (in_array($fieldName, $fieldArray)) {
+                $io->error(sprintf("The \"%s\" property already exists.", $fieldName));
+                continue;
+            }
+
+            $requestType = $io->ask('Is this JSON or Form request? (json/form/file)', 'json', function ($value) {
+
+                if (strtolower($value) !== 'json' && strtolower($value) !== 'form' && strtolower($value) !== 'file') {
+                    throw new RuntimeCommandException("Value must be 'json', 'form' or 'file'");
+                }
+
+                return $value;
+            });
+
+            $fieldArray[] = [
+                'name' => $fieldName,
+                'type' => $requestType
+            ];
+
+            $addNewProperty = $io->ask('New property name (press <return> to stop adding fields)');
+        }
+
+        // generate dto
+        $generator->generateClass(
+            $dtoClassDetails->getFullName(),
+            __DIR__ . '/../Resources/skeleton/dto/Dto.tpl.php',
+            [
+                'fieldArray' => $fieldArray
+            ]
+        );
+
+        $generator->writeChanges();
+    }
+
+    private function generateMapper($classname, $dtoClassDetails, ConsoleStyle $io, Generator $generator)
+    {
+        $entityClassname = $io->askQuestion($this->createEntityClassQuestion('Enter entity class name for generating new mapper'));
+
+        $entityClassDetails = $generator->createClassNameDetails(
+            Validator::entityExists($entityClassname, $this->doctrineHelper->getEntitiesForAutocomplete()),
+            'Entity\\'
+        );
+
+        $mapperClassNameDetails = $generator->createClassNameDetails(
+            $classname,
+            'Dto\\Mapper\\',
+            'MapperConfig'
+        );
+
+        // generate mapper config
+        $generator->generateClass(
+            $mapperClassNameDetails->getFullName(),
+            __DIR__ . '/../Resources/skeleton/dto/Mapper.tpl.php',
+            [
+                'dto_class_name' => $dtoClassDetails->getShortName(),
+                'dto_full_class_name' => $dtoClassDetails->getFullName(),
+                'entity_class_name' => $entityClassDetails->getShortName(),
+                'entity_full_class_name' => $entityClassDetails->getFullName(),
+            ]
+        );
+
+        $generator->writeChanges();
     }
 }

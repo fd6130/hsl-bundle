@@ -58,6 +58,16 @@ class <?= $class_name ?> extends <?= $parent_class_name; ?><?= "\n" ?>
 <?php endif ?>
 
     /**
+     * @Route("/{<?= $entity_identifier ?>}", name="<?= $route_name ?>_item", methods={"GET"}, requirements={"<?= $entity_identifier ?>"="\d+"})
+     */
+    public function item(<?= $entity_class_name ?> $<?= $entity_var_singular ?>, Request $request): Response
+    {
+        $data = new Item($<?= $entity_var_singular ?>, <?= $transformer_class_name ?>::class);
+
+        return $this->json($this->fractal($request)->createData($data)->toArray());
+    }
+
+    /**
      * @Route("", name="<?= $route_name ?>_create", methods={"POST"})
      */
     public function create(<?= $dto_class_name ?> $dto)
@@ -69,16 +79,6 @@ class <?= $class_name ?> extends <?= $parent_class_name; ?><?= "\n" ?>
         $entityManager->flush();
 
         return $this->json(['id' => $<?= $entity_var_singular ?>->getId()], 201);
-    }
-
-    /**
-     * @Route("/{<?= $entity_identifier ?>}", name="<?= $route_name ?>_item", methods={"GET"}, requirements={"<?= $entity_identifier ?>"="\d+"})
-     */
-    public function item(<?= $entity_class_name ?> $<?= $entity_var_singular ?>, Request $request): Response
-    {
-        $data = new Item($<?= $entity_var_singular ?>, <?= $transformer_class_name ?>::class);
-
-        return $this->json($this->fractal($request)->createData($data)->toArray());
     }
 
     /**

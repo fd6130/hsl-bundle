@@ -3,7 +3,7 @@
 namespace <?= $namespace; ?>;
 
 use League\Fractal\TransformerAbstract;
-use <?= $entity_full_class_name ?>;
+<?php if(!$no_entity): ?>use <?= $entity_full_class_name ?>;<?php endif ?>
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 
@@ -33,12 +33,16 @@ class <?= $class_name ?> extends TransformerAbstract
      * Add whatever properties & methods you need to hold the
      * data for this message class.
      */
-    public function transform(?<?= $entity_class_name ?> $<?= $entity_variable_name ?>): ?array
+    public function transform(<?php if(!$no_entity):?> ?<?= $entity_class_name ?> $<?= $entity_variable_name ?><?php else:?>$variable<?php endif ?>): ?array
     {
         // Decorate your return data in array form.
+<?php if(!$no_entity): ?>
         return $<?= $entity_variable_name ?> ? [
             'id' => $<?= $entity_variable_name ?>->getId(),
         ] : null;
+<?php else: ?>
+        return $variable ? [] : null; 
+<?php endif ?>
     }
 
     /**
@@ -46,9 +50,10 @@ class <?= $class_name ?> extends TransformerAbstract
      *
      * Example: If you include 'user', the method name and its parameter will be 'public function includeUser()'
      */
-//   public function includeExample(?<?= $entity_class_name ?> $<?= $entity_variable_name ?>)
+//   public function includeExample(?Entity $entity)
 //   {
-//       return $<?= $entity_variable_name ?>->getterMethod() ? $this->item($<?= $entity_variable_name ?>->getterMethod(), /** transformer class */) : $this->null();
+//       return $entity->getterMethod() ? new Item($entity->getterMethod(), /** transformer class */) : $this->null();
+//       return $entity->getterMethod() ? new Collection($entity->getterMethod(), /** transformer class */) : $this->null();
 //   }
 
 }
