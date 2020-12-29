@@ -64,7 +64,6 @@ final class MakeHslDto extends AbstractMaker
         }
         else
         {
-            $argument = $command->getDefinition()->getArgument('class-name');
             $value = $io->ask($argument->getDescription(), null, [Validator::class, 'notBlank']);
             $input->setArgument('class-name', $value);
         }
