@@ -4,4 +4,4 @@ The <info>%command.name%</info> command generates a new transformer class.
 
 <info>php %command.full_name% --no-entity</info>
 
-If the argument is missing, the command will ask for the class name interactively.
+Arguments are optional.

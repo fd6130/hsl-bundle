@@ -4,4 +4,4 @@ The <info>%command.name%</info> command generates a new dto class.
 
 <info>php %command.full_name% --generate-mapper</info>
 
-If the argument is missing, the command will ask for the class name interactively.
+Arguments are optional.
