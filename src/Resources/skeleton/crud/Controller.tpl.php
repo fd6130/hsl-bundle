@@ -6,14 +6,13 @@ use AutoMapperPlus\AutoMapperInterface;
 use <?= $dto_full_class_name ?>;
 use <?= $entity_full_class_name ?>;
 use <?= $transformer_full_class_name ?>;
+use <?= $repository_full_class_name ?>;
 use Fd\HslBundle\Fractal\FractalTrait;
 use Fd\HslBundle\Pagination\PaginatorInterface;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-<?php if (isset($repository_full_class_name)): ?>
-use <?= $repository_full_class_name ?>;
-<?php endif ?>
+use MonterHealth\ApiFilterBundle\MonterHealthApiFilter;
 use Symfony\Bundle\FrameworkBundle\Controller\<?= $parent_class_name ?>;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,25 +36,15 @@ class <?= $class_name ?> extends <?= $parent_class_name; ?><?= "\n" ?>
     /**
      * @Route("", name="<?= $route_name ?>_collection", methods={"GET"})
      */
-<?php if (isset($repository_full_class_name)): ?>
-    public function collection(Request $request, <?= $repository_class_name ?> $<?= $repository_var ?>, PaginatorInterface $pagination): Response
+    public function collection(Request $request, <?= $repository_class_name ?> $<?= $repository_var ?>, PaginatorInterface $pagination, MonterHealthApiFilter $monterHealthApiFilter): Response
     {
-        $data = $pagination->paginate($<?= $repository_var ?>->createQueryBuilder('qb'), <?= $transformer_class_name ?>::class);
-        
-        return $this->json($this->fractal($request)->createData($data)->toArray());
-    }
-<?php else: ?>
-    public function collection(Request $request, PaginationManager $pagination): Response
-    {
-        $<?= $entity_var_plural ?> = $this->getDoctrine()
-            ->getRepository(<?= $entity_class_name ?>::class)
-            ->findByQB();
+        $qb = $<?= $repository_var ?>->createQueryBuilder('qb');
+        $monterHealthApiFilter->addFilterConstraints($qb, $<?= $repository_var ?>->getClassName(), $request->query);
 
-        $data = $pagination->getQueryBuilderPagination()->paginate($<?= $entity_var_plural ?>, <?= $transformer_class_name ?>::class);
+        $data = $pagination->paginate($qb, <?= $transformer_class_name ?>::class);
         
         return $this->json($this->fractal($request)->createData($data)->toArray());
     }
-<?php endif ?>
 
     /**
      * @Route("/{<?= $entity_identifier ?>}", name="<?= $route_name ?>_item", methods={"GET"}, requirements={"<?= $entity_identifier ?>"="\d+"})

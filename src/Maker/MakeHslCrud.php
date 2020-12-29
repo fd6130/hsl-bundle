@@ -25,6 +25,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 final class MakeHslCrud extends AbstractMaker
 {
+    use MakerTrait;
+
     private $doctrineHelper;
 
     private $inflector;
@@ -50,79 +52,66 @@ final class MakeHslCrud extends AbstractMaker
     {
         $command
             ->setDescription('Creates API CRUD for Doctrine entity class')
-            ->addArgument('entity-class', InputArgument::OPTIONAL, sprintf('The class name of the entity to create CRUD (e.g. <fg=yellow>%s</>)', Str::asClassName(Str::getRandomTerm())))
-            ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeHslCrud.txt'))
-        ;
+            ->addArgument('name', InputArgument::OPTIONAL, sprintf('The class name for new CRUD controller (e.g. <fg=yellow>%s</>)', Str::asClassName(Str::getRandomTerm())))
+            ->addArgument('entity-name', InputArgument::OPTIONAL, 'The existing entity class for this CRUD')
+            ->setHelp(file_get_contents(__DIR__ . '/../Resources/help/MakeHslCrud.txt'));
 
-        $inputConfig->setArgumentAsNonInteractive('entity-class');
+        $inputConfig->setArgumentAsNonInteractive('entity-name');
     }
 
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command)
     {
-        if (null === $input->getArgument('entity-class')) {
-            $argument = $command->getDefinition()->getArgument('entity-class');
-
-            $entities = $this->doctrineHelper->getEntitiesForAutocomplete();
-
-            $question = new Question($argument->getDescription());
-            $question->setAutocompleterValues($entities);
-
-            $value = $io->askQuestion($question);
-
-            $input->setArgument('entity-class', $value);
-        }
+        $argument = $command->getDefinition()->getArgument('entity-name');
+        $entityClassname = $io->askQuestion($this->createEntityClassQuestion($argument->getDescription()));
+        $input->setArgument('entity-name', $entityClassname);
     }
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator)
     {
         $entityClassDetails = $generator->createClassNameDetails(
-            Validator::entityExists($input->getArgument('entity-class'), $this->doctrineHelper->getEntitiesForAutocomplete()),
+            Validator::entityExists($input->getArgument('entity-name'), $this->doctrineHelper->getEntitiesForAutocomplete()),
             'Entity\\'
         );
 
         $entityDoctrineDetails = $this->doctrineHelper->createDoctrineDetails($entityClassDetails->getFullName());
 
         $repositoryVars = [];
+        $repositoryClassDetails = $generator->createClassNameDetails(
+            '\\' . $entityDoctrineDetails->getRepositoryClass(),
+            'Repository\\',
+            'Repository'
+        );
 
-        // check if got repository and get it
-        if (null !== $entityDoctrineDetails->getRepositoryClass()) {
-            $repositoryClassDetails = $generator->createClassNameDetails(
-                '\\'.$entityDoctrineDetails->getRepositoryClass(),
-                'Repository\\',
-                'Repository'
-            );
-
-            $repositoryVars = [
-                'repository_full_class_name' => $repositoryClassDetails->getFullName(),
-                'repository_class_name' => $repositoryClassDetails->getShortName(),
-                'repository_var' => lcfirst($this->singularize($repositoryClassDetails->getShortName())),
-            ];
-        }
-
+        $repositoryVars = [
+            'repository_full_class_name' => $repositoryClassDetails->getFullName(),
+            'repository_class_name' => $repositoryClassDetails->getShortName(),
+            'repository_var' => lcfirst($this->singularize($repositoryClassDetails->getShortName())),
+        ];
+        
         // check if got DTO and get it
+        $dtoClassname = Str::asClassName($io->ask('Enter dto class name for this CRUD', null, [Validator::class, 'notBlank']));
         $dtoClassDetails = $generator->createClassNameDetails(
-            $entityClassDetails->getShortName() . 'Input',
+            $dtoClassname,
             'Dto\\Input\\'
         );
 
-        if(!class_exists($dtoClassDetails->getFullName()))
-        {
-            throw new RuntimeCommandException(sprintf("You must create a DTO (make:hsl:dto) for entity '%s' first.", $entityClassDetails->getFullName()));
+        if (!class_exists($dtoClassDetails->getFullName())) {
+            throw new RuntimeCommandException(sprintf("Class \"%s\" does not exist.", $dtoClassDetails->getFullName()));
         }
-
+        
         // check if got Transformer and get it
+        $transformerClassname = Str::asClassName($io->ask('Enter transformer class name for this CRUD', null, [Validator::class, 'notBlank']));
         $transformerClassDetails = $generator->createClassNameDetails(
-            $entityClassDetails->getShortName() . 'Transformer',
+            $transformerClassname,
             'Transformer\\'
         );
 
-        if(!class_exists($transformerClassDetails->getFullName()))
-        {
-            throw new RuntimeCommandException(sprintf("You must create a Transformer (make:hsl:transformer) for entity '%s' first.", $entityClassDetails->getFullName()));
+        if (!class_exists($transformerClassDetails->getFullName())) {
+            throw new RuntimeCommandException(sprintf("Class \"%s\" does not exist.", $transformerClassDetails->getFullName()));
         }
 
         $controllerClassDetails = $generator->createClassNameDetails(
-            $entityClassDetails->getRelativeNameWithoutSuffix().'Controller',
+            Str::asClassName($input->getArgument('name')) . 'Controller',
             'Controller\\',
             'Controller'
         );
@@ -136,8 +125,9 @@ final class MakeHslCrud extends AbstractMaker
 
         $generator->generateController(
             $controllerClassDetails->getFullName(),
-            __DIR__.'/../Resources/skeleton/crud/Controller.tpl.php',
-            array_merge([
+            __DIR__ . '/../Resources/skeleton/crud/Controller.tpl.php',
+            array_merge(
+                [
                     'entity_full_class_name' => $entityClassDetails->getFullName(),
                     'entity_class_name' => $entityClassDetails->getShortName(),
                     'dto_full_class_name' => $dtoClassDetails->getFullName(),

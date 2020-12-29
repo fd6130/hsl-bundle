@@ -13,6 +13,7 @@
         "samj/fractal-bundle": "^4.0",
         "babdev/pagerfanta-bundle": "^2.2",
         "mark-gerarts/automapper-plus-bundle": "^1.2",
+        "monterhealth/api-filter-bundle": "^1.2",
         "intervention/image": "^2.5",
         "symfony-bundles/json-request-bundle": "^3.0",
         "symfony/apache-pack": "^1.0",
@@ -30,7 +31,6 @@
         "twig/extra-bundle": "For email css",
         "twig/inky-extra": "For email css",
         "nesbot/carbon": "Easy format your datetime",
-        "nelmio/cors-bundle": "CORS management",
-        "monterhealth/api-filter-bundle": "Api filter in query builder"
+        "nelmio/cors-bundle": "CORS management"
     }
 }
