@@ -3,7 +3,7 @@
 namespace <?= $namespace; ?>;
 
 use League\Fractal\TransformerAbstract;
-<?php if(!$no_entity): ?>use <?= $entity_full_class_name ?>;<?php endif ?>
+<?php if(!$no_entity): ?>use <?= $entity_full_class_name. ";\n"?><?php endif ?>
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 
@@ -33,7 +33,7 @@ class <?= $class_name ?> extends TransformerAbstract
      * Add whatever properties & methods you need to hold the
      * data for this message class.
      */
-    public function transform(<?php if(!$no_entity):?> ?<?= $entity_class_name ?> $<?= $entity_variable_name ?><?php else:?>$variable<?php endif ?>): ?array
+    public function transform(<?php if(!$no_entity):?>?<?= $entity_class_name ?> $<?= $entity_variable_name ?><?php else:?>$variable<?php endif ?>): ?array
     {
         // Decorate your return data in array form.
 <?php if(!$no_entity): ?>
