@@ -51,9 +51,9 @@ fd_hsl:
 ## Usage
 
 1. [Pagination](./src/Resources/doc/pagination.md)
-1. [Transformer](https://github.com/samjarrett/FractalBundle)
-1. [Auto Mapper](https://github.com/mark-gerarts/automapper-plus-bundle)
-1. [File Upload](https://github.com/dustin10/VichUploaderBundle/blob/master/docs/index.md)
+1. [Transformer](./src/Resources/doc/transformer.md)
+1. [DTO and Mapper](./src/Resources/doc/dto_mapper.md)
+1. [File Upload](./src/Resources/doc/file_upload.md)
 
 
 ## Command at a glance
