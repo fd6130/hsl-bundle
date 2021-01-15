@@ -48,9 +48,12 @@ fd_hsl:
             resize_to_width: 1024
 ```
 
-## Documentation
+## Usage
 
-Will update this soon.
+1. [Pagination](./src/Resources/doc/pagination.md)
+1. [Transformer](https://github.com/samjarrett/FractalBundle)
+1. [Auto Mapper](https://github.com/mark-gerarts/automapper-plus-bundle)
+1. [File Upload](https://github.com/dustin10/VichUploaderBundle/blob/master/docs/index.md)
 
 
 ## Command at a glance
