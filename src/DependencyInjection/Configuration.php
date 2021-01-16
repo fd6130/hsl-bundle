@@ -24,7 +24,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('hsl_image_upload_listener')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->booleanNode('enable')->defaultTrue()->end()
+                        ->booleanNode('enable')->defaultFalse()->end()
                         ->scalarNode('save_as_extension')->defaultNull()->end()
                         ->integerNode('quality')->defaultValue(HslImageUploadListener::DEFAULT_QUALITY)->end()
                         ->arrayNode('resize')
