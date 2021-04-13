@@ -11,13 +11,10 @@
     "require": {
         "php": "^7.2.5",
         "samj/fractal-bundle": "^4.0",
-        "babdev/pagerfanta-bundle": "^2.2",
+        "babdev/pagerfanta-bundle": "^3.0",
         "mark-gerarts/automapper-plus-bundle": "^1.2",
         "monterhealth/api-filter-bundle": "^1.2",
-        "intervention/image": "^2.5",
-        "symfony-bundles/json-request-bundle": "^3.0",
-        "symfony/apache-pack": "^1.0",
-        "vich/uploader-bundle": "^1.13"
+        "symfony-bundles/json-request-bundle": "^4.0"
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.0",
