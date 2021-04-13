@@ -25,8 +25,5 @@ class FdHslExtension extends Extension
         
         $paginatorDefinition = $container->getDefinition('fdhsl.pagination.paginator');
         $paginatorDefinition->setArgument(2, $config['paginator']['default_limit']);
-
-        $hslImageUpload = $container->getDefinition(HslImageUploadListener::class);
-        $hslImageUpload->setArgument(0, $config['hsl_image_upload_listener']);
     }
 }
