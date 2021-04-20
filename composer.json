@@ -14,7 +14,8 @@
         "babdev/pagerfanta-bundle": "^3.0",
         "mark-gerarts/automapper-plus-bundle": "^1.2",
         "monterhealth/api-filter-bundle": "^1.2",
-        "symfony-bundles/json-request-bundle": "^4.0"
+        "symfony-bundles/json-request-bundle": "^4.0",
+        "pagerfanta/pagerfanta": "^3.0"
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.0",
