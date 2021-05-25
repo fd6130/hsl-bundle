@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\Question;
-use SymfonyBundles\JsonRequestBundle\SymfonyBundlesJsonRequestBundle;
+use SymfonyBundles\JsonRequestBundle\JsonRequestBundle;
 
 /**
  * @author fd6130 <https://github.com/fd6130>
@@ -114,7 +114,7 @@ final class MakeHslDto extends AbstractMaker
 
     public function configureDependencies(DependencyBuilder $dependencies)
     {
-        $dependencies->addClassDependency(SymfonyBundlesJsonRequestBundle::class, 'symfony-bundles/json-request-bundle');
+        $dependencies->addClassDependency(JsonRequestBundle::class, 'symfony-bundles/json-request-bundle');
         $dependencies->addClassDependency(AutoMapperConfiguratorInterface::class, 'mark-gerarts/automapper-plus-bundle');
     }
 
