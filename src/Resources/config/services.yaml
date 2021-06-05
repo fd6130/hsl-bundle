@@ -1,29 +1,26 @@
 services:
-  _defaults:
-    autowire: true # Automatically injects dependencies in your services.
-    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-
   # maker-bundle
   maker.maker.make_hsl_dto:
     class: Fd\HslBundle\Maker\MakeHslDto
     arguments: ["@maker.doctrine_helper"]
-    #tags: ["maker.command"]
+    tags: ["maker.command"]
   maker.maker.make_hsl_transformer:
     class: Fd\HslBundle\Maker\MakeHslTransformer
     arguments: ["@maker.doctrine_helper"]
+    tags: ["maker.command"]
   maker.maker.make_hsl_crud:
     class: Fd\HslBundle\Maker\MakeHslCrud
     arguments: ["@maker.doctrine_helper"]
-
-  # transformers should be public because FractalBundle will fetch
-  # services from container using service id.
-  # App\Transformer\:
-  #   resource: "%kernel.project_dir%/src/Transformer"
-  #   public: true
+    tags: ["maker.command"]
 
   # Dto services
-  Fd\HslBundle\DtoRequestResolver:
-    #arguments: ["@validator"]
+  Fd\HslBundle\DtoRequestResolver: # deprecated, will remove in next version.
+    arguments: ["@validator"]
+    tags:
+      - { name: "controller.argument_value_resolver", priority: 50 }
+
+  Fd\HslBundle\Dto\DtoRequestResolver:
+    arguments: ["@validator"]
     tags:
       - { name: "controller.argument_value_resolver", priority: 50 }
 
@@ -34,6 +31,11 @@ services:
   Fd\HslBundle\Pagination\PaginatorInterface: "@fdhsl.pagination.paginator"
 
   # JsonResponseException
-  Fd\HslBundle\Event\Listener\JsonResponseExceptionListener:
+  Fd\HslBundle\Event\Listener\JsonResponseExceptionListener: # deprecated, will remove in next version.
+    tags:
+      - { name: kernel.event_listener, event: kernel.exception }
+
+  # DtoValidationException
+  Fd\HslBundle\Event\Listener\DtoValidationExceptionListener:
     tags:
       - { name: kernel.event_listener, event: kernel.exception }
