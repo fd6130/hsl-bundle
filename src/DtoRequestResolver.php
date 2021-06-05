@@ -63,7 +63,7 @@ class DtoRequestResolver implements ArgumentValueResolverInterface
             {
                 $errorMessages [] = $error->getPropertyPath() . ' => ' . $error->getMessage();
             }
-            throw new DtoValidationException(['messages' => $errorMessages]);
+            throw new JsonResponseException('Bad Request', $errorMessages);
         }
 
         yield $dto;
