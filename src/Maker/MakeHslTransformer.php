@@ -64,7 +64,7 @@ final class MakeHslTransformer extends AbstractMaker
     {
         if ($input->getOption('no-entity')) {
             $io->block([
-                'Note: You have choose to generate a plank Transformer.',
+                'Note: You have choose to generate a blank Transformer.',
             ], null, 'fg=yellow');
             $classname = $io->ask(sprintf('The class name of new Transformer (e.g. <fg=yellow>%s</>)', Str::asClassName(Str::getRandomTerm())), null, [Validator::class, 'notBlank']);
             
