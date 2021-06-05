@@ -27,6 +27,7 @@ services:
   # paginator
   fdhsl.pagination.paginator:
     class: Fd\HslBundle\Pagination\Paginator
+    arguments: ["@router", "@request_stack"]
 
   Fd\HslBundle\Pagination\PaginatorInterface: "@fdhsl.pagination.paginator"
 
