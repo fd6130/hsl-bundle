@@ -4,6 +4,9 @@ namespace Fd\HslBundle\Exception;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+/**
+ * @deprecated will be remove in next version, use your own exception class instead.
+ */
 class JsonResponseException extends HttpException
 {
     /**

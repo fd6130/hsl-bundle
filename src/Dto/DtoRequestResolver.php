@@ -1,10 +1,8 @@
 <?php
 
-namespace Fd\HslBundle;
+namespace Fd\HslBundle\Dto;
 
 use Fd\HslBundle\Exception\DtoValidationException;
-use Fd\HslBundle\Exception\JsonResponseException;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -12,8 +10,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Use to resolve a request to DTO
- * 
- * @deprecated will be remove in next verison, use Fd\HslBundle\Dto\DtoRequestResolver instead.
  */
 class DtoRequestResolver implements ArgumentValueResolverInterface
 {

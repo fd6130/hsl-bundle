@@ -2,24 +2,18 @@
 
 namespace Fd\HslBundle\Event\Listener;
 
-use App\Exception\CustomJsonExceptionInterface;
-use Fd\HslBundle\Exception\JsonResponseException;
+use Fd\HslBundle\Exception\DtoValidationException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
-/**
- * @deprecated will remove in next version, use DtoValidationExceptionListener instead.
- */
-class JsonResponseExceptionListener
+class DtoValidationExceptionListener
 {
     public function onKernelException(ExceptionEvent $event)
     {
         // You get the exception object from the received event
         $exception = $event->getThrowable();
 
-        if(!$exception instanceof JsonResponseException)
+        if(!$exception instanceof DtoValidationException)
         {
             return;
         }
