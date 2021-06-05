@@ -24,7 +24,6 @@
         "easycorp/easy-deploy-bundle": "^1.0"
     },
     "suggest": {
-        "monterhealth/api-filter-bundle": "For filtering in QueryBuilder",
         "vich/uploader-bundle": "For file upload",
         "lexik/jwt-authentication-bundle": "Install this if you need JWT authentication",
         "etnynl/jwt-refresh-token-bundle": "Install this if you need JWT refresh token",
