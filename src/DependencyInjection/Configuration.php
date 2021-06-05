@@ -2,7 +2,6 @@
 
 namespace Fd\HslBundle\DependencyInjection;
 
-use Fd\HslBundle\Event\Listener\HslImageUploadListener;
 use Fd\HslBundle\Pagination\PaginatorInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
