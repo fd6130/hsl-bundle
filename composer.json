@@ -15,13 +15,17 @@
         "mark-gerarts/automapper-plus-bundle": "^1.2",
         "monterhealth/api-filter-bundle": "^1.2",
         "symfony-bundles/json-request-bundle": "^4.0",
-        "pagerfanta/pagerfanta": "^3.0"
+        "pagerfanta/pagerfanta": "^3.0",
+        "symfony/validator": "^4.4|^5.0",
+        "doctrine/annotations": "^1.13"
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.0",
         "easycorp/easy-deploy-bundle": "^1.0"
     },
     "suggest": {
+        "monterhealth/api-filter-bundle": "For filtering in QueryBuilder",
+        "vich/uploader-bundle": "For file upload",
         "lexik/jwt-authentication-bundle": "Install this if you need JWT authentication",
         "etnynl/jwt-refresh-token-bundle": "Install this if you need JWT refresh token",
         "symfony/webpack-encore-bundle": "Install this if you need Webpack to manage your assets",
