@@ -15,7 +15,7 @@
         "samj/fractal-bundle": "^4.0",
         "babdev/pagerfanta-bundle": "^3.0",
         "mark-gerarts/automapper-plus-bundle": "^1.2",
-        "fd6130/api-filter-bundle": "dev-master",
+        "fd6130/api-filter-bundle": "1.2.*",
         "symfony-bundles/json-request-bundle": "^4.0",
         "pagerfanta/pagerfanta": "^3.0",
         "symfony/validator": "^4.4|^5.0",
