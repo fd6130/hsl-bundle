@@ -3,6 +3,8 @@
     "description": "This bundle provide some ease of development for Symfony beginner.",
     "type": "symfony-bundle",
     "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Fd\\HslBundle\\": "src/"
