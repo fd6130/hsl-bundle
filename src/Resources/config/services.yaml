@@ -14,12 +14,8 @@ services:
     tags: ["maker.command"]
 
   # Dto services
-  Fd\HslBundle\DtoRequestResolver: # deprecated, will remove in next version.
-    arguments: ["@validator"]
-    tags:
-      - { name: "controller.argument_value_resolver", priority: 50 }
-
-  Fd\HslBundle\Dto\DtoRequestResolver:
+  fdhsl.dto.dto_request_resolver:
+    class: Fd\HslBundle\Dto\DtoRequestResolver
     arguments: ["@validator"]
     tags:
       - { name: "controller.argument_value_resolver", priority: 50 }
@@ -31,12 +27,8 @@ services:
 
   Fd\HslBundle\Pagination\PaginatorInterface: "@fdhsl.pagination.paginator"
 
-  # JsonResponseException
-  Fd\HslBundle\Event\Listener\JsonResponseExceptionListener: # deprecated, will remove in next version.
-    tags:
-      - { name: kernel.event_listener, event: kernel.exception }
-
   # DtoValidationException
-  Fd\HslBundle\Event\Listener\DtoValidationExceptionListener:
+  fdhsl.event.dto_validation_exception_listener:
+    class: Fd\HslBundle\Event\DtoValidationExceptionListener
     tags:
       - { name: kernel.event_listener, event: kernel.exception }
