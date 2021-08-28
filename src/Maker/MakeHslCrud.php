@@ -45,6 +45,11 @@ final class MakeHslCrud extends AbstractMaker
         return 'make:hsl:crud';
     }
 
+    public static function getCommandDescription(): string
+    {
+        return 'Creates a new controller class';
+    }
+
     /**
      * {@inheritdoc}
      */

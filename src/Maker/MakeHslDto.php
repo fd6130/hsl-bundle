@@ -40,6 +40,12 @@ final class MakeHslDto extends AbstractMaker
         return 'make:hsl:dto';
     }
 
+    public static function getCommandDescription(): string
+    {
+        return 'Creates a new dto class';
+    }
+
+
     public function configureCommand(Command $command, InputConfiguration $inputConf)
     {
         $command

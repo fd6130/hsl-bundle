@@ -47,6 +47,12 @@ final class MakeHslTransformer extends AbstractMaker
         return 'make:hsl:transformer';
     }
 
+    public static function getCommandDescription(): string
+    {
+        return 'Creates a new transformer class';
+    }
+
+
     public function configureCommand(Command $command, InputConfiguration $inputConf)
     {
         $command
