@@ -1,6 +1,6 @@
 <?php
 
-namespace Fd\HslBundle\Event\Listener;
+namespace Fd\HslBundle\Event;
 
 use Fd\HslBundle\Exception\DtoValidationException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -10,7 +10,6 @@ class DtoValidationExceptionListener
 {
     public function onKernelException(ExceptionEvent $event)
     {
-        // You get the exception object from the received event
         $exception = $event->getThrowable();
 
         if(!$exception instanceof DtoValidationException)
@@ -18,10 +17,13 @@ class DtoValidationExceptionListener
             return;
         }
 
-        // Customize your response object to display the exception details
-        $response = new JsonResponse($exception->getMessage(), $exception->getStatusCode(), $exception->getHeaders(), true);
+        $data = [
+            'message' => $exception->getMessage(),
+            'context' => $exception->getContext()
+        ];
 
-        // sends the modified response object to the event
+        $response = new JsonResponse($data, $exception->getStatusCode());
+
         $event->setResponse($response);
     }
 }
