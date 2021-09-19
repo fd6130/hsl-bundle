@@ -35,6 +35,7 @@ services:
   Fd\HslBundle\Pagination\PaginatorInterface: "@fdhsl.pagination.paginator"
 
   # DtoValidationException
-  Fd\HslBundle\Event\Listener\DtoValidationExceptionListener:
+  fdhsl.event.dto_validation_exception_listener:
+    class: Fd\HslBundle\Event\DtoValidationExceptionListener
     tags:
       - { name: kernel.event_listener, event: kernel.exception }
