@@ -7,8 +7,6 @@ hsl-bundle provide you some nice feature that can help you to speed up your deve
 - maker command for API CRUD Controller (boilerplate code for your need)
 - pagination (it is integrated during the controller creation)
 
-```
-
 ## Prerequisites
 
 1. PHP 7.2 or above
@@ -18,9 +16,8 @@ hsl-bundle provide you some nice feature that can help you to speed up your deve
 
 ## Installation
 
-```
-composer require "fd6130/hsl-bundle"
-```
+`composer require "fd6130/hsl-bundle"`
+
 
 ## Configuration
 
