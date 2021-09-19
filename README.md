@@ -1,23 +1,12 @@
 # hsl-bundle
 
-hsl-bundle provide you some nice feature that you might / might not needed:
+hsl-bundle provide you some nice feature that can help you to speed up your development:
 
 - maker command for DTOs (DTOs are use for POST and PUT request)
 - maker command for Transformers (customize your result)
 - maker command for API CRUD Controller (boilerplate code for your need)
 - pagination (it is integrated during the controller creation)
 
-## For php 8 user
-
-There is one library that will cause error in php 8, for temporarily solution please add this code to your composer.json before require this bundle:
-
-```json
-"repositories": [
-    {
-        "type": "vcs",
-        "url": "https://github.com/fd6130/api-filter-bundle.git"
-    }
-]
 ```
 
 ## Prerequisites
