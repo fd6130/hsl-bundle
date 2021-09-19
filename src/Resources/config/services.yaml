@@ -14,17 +14,24 @@ services:
     tags: ["maker.command"]
 
   # Dto services
-  fdhsl.dto.dto_request_resolver:
-    class: Fd\HslBundle\Dto\DtoRequestResolver
+  Fd\HslBundle\Dto\DtoRequestResolver:
     arguments: ["@validator"]
     tags:
       - { name: "controller.argument_value_resolver", priority: 50 }
+
+  fdhsl.dto.validator.dto_validator:
+    class: Fd\HslBundle\Dto\Validator\DtoValidator
+    arguments: ["@validator"]
+  Fd\HslBundle\Dto\Validator\DtoValidator:
+    arguments: ["@validator"]
+  Fd\HslBundle\Dto\Validator\DtoValidatorInterface: "@fdhsl.dto.validator.dto_validator"
 
   # paginator
   fdhsl.pagination.paginator:
     class: Fd\HslBundle\Pagination\Paginator
     arguments: ["@router", "@request_stack"]
-
+  Fd\HslBundle\Pagination\Paginator:
+    arguments: ["@router", "@request_stack"]
   Fd\HslBundle\Pagination\PaginatorInterface: "@fdhsl.pagination.paginator"
 
   # DtoValidationException

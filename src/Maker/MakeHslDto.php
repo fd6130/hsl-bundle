@@ -42,9 +42,8 @@ final class MakeHslDto extends AbstractMaker
 
     public static function getCommandDescription(): string
     {
-        return 'Creates a new dto class';
+        return 'Create a data transfer object class for mapping purpose.';
     }
-
 
     public function configureCommand(Command $command, InputConfiguration $inputConf)
     {

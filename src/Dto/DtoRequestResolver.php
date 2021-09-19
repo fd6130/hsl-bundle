@@ -60,7 +60,7 @@ class DtoRequestResolver implements ArgumentValueResolverInterface
                 $errorMessages [] = $error->getPropertyPath() . ' => ' . $error->getMessage();
             }
 
-            throw new DtoValidationException(sprintf("Fail to pass DTO validation at '%s'", get_class($dto)), $errorMessages);
+            throw new DtoValidationException('', $errorMessages);
         }
 
         yield $dto;
