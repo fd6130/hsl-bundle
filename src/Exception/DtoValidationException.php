@@ -7,10 +7,10 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class DtoValidationException extends HttpException
 {
     /**
-     * @param null|string|array     $message  Message for this error
+     * @param string|array $message 
      */
-    public function __construct($message = null)
+    public function __construct($message = '')
     {
-        parent::__construct(400, json_encode($message), null, [] , 0);
+        parent::__construct(400, is_array($message) ? json_encode($message) : $message, null, [] , 0);
     }
 }
