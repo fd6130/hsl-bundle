@@ -35,14 +35,17 @@ final class MakeHslCrud extends AbstractMaker
     {
         $this->doctrineHelper = $doctrineHelper;
 
-        if (class_exists(InflectorFactory::class)) {
-            $this->inflector = InflectorFactory::create()->build();
-        }
+        $this->inflector = InflectorFactory::create()->build();
     }
 
     public static function getCommandName(): string
     {
         return 'make:hsl:crud';
+    }
+
+    public static function getCommandDescription()
+    {
+        return 'Create a generic CRUD controller.';
     }
 
     /**
@@ -169,19 +172,11 @@ final class MakeHslCrud extends AbstractMaker
 
     private function pluralize(string $word): string
     {
-        if (null !== $this->inflector) {
-            return $this->inflector->pluralize($word);
-        }
-
-        return LegacyInflector::pluralize($word);
+        return $this->inflector->pluralize($word);
     }
 
     private function singularize(string $word): string
     {
-        if (null !== $this->inflector) {
-            return $this->inflector->singularize($word);
-        }
-
-        return LegacyInflector::singularize($word);
+        return $this->inflector->singularize($word);
     }
 }
