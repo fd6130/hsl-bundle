@@ -47,7 +47,7 @@ final class MakeHslTransformer extends AbstractMaker
         return 'make:hsl:transformer';
     }
 
-    public static function getCommandDescription()
+    public static function getCommandDescription(): string
     {
         return 'Create a transformer class for transforming data to your flavour.';
     }

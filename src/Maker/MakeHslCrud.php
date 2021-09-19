@@ -43,7 +43,7 @@ final class MakeHslCrud extends AbstractMaker
         return 'make:hsl:crud';
     }
 
-    public static function getCommandDescription()
+    public static function getCommandDescription(): string
     {
         return 'Create a generic CRUD controller.';
     }
