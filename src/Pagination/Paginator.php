@@ -2,7 +2,9 @@
 
 namespace Fd\HslBundle\Pagination;
 
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Fd\HslBundle\Pagination\Adapter\DoctrineAdapter;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\PagerfantaPaginatorAdapter;
 use League\Fractal\Resource\Collection;
@@ -30,15 +32,15 @@ class Paginator implements PaginatorInterface
     /**
      * {@inheritdoc}
      */
-    public function paginate($result, $transformer): ResourceAbstract
+    public function paginate($result, $transformer, ?int $lifetime = null, ?string $resultCacheId = null): ResourceAbstract
     {
         $request = $this->requestStack->getCurrentRequest();
         $page = $request->query->getInt('page', 1);
         $limitPerPage = $request->query->getInt('limit', $this->limit);
 
-        if($result instanceof QueryBuilder)
+        if($result instanceof QueryBuilder || $result instanceof Query)
         {
-            $adapter = new QueryAdapter($result);
+            $adapter = new DoctrineAdapter($result, true, null, $lifetime, $resultCacheId);
         }
         else
         {
