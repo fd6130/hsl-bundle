@@ -7,9 +7,6 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Pagerfanta\Adapter\AdapterInterface;
 
-/**
- * Adapter which calculates pagination from a Doctrine ORM Query or QueryBuilder.
- */
 class DoctrineAdapter implements AdapterInterface
 {
     private Paginator $paginator;
@@ -18,8 +15,10 @@ class DoctrineAdapter implements AdapterInterface
 
     /**
      * @param Query|QueryBuilder $query
-     * @param bool               $fetchJoinCollection Whether the query joins a collection (true by default)
-     * @param bool|null          $useOutputWalkers    Flag indicating whether output walkers are used in the paginator
+     * @param bool $fetchJoinCollection Whether the query joins a collection (true by default)
+     * @param bool|null $useOutputWalkers Flag indicating whether output walkers are used in the paginator
+     * @param int|null $lifetime To indicate how long the cache is alive
+     * @param string|null $resultCacheId The unique id for caching   
      */
     public function __construct($query, bool $fetchJoinCollection = true, ?bool $useOutputWalkers = null, ?int $lifetime = null, ?string $resultCacheId = null)
     {
