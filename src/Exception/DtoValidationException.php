@@ -9,9 +9,6 @@ class DtoValidationException extends HttpException
 {
     protected $context = [];
 
-    /**
-     * @param string|array $message 
-     */
     public function __construct(?string $message = '', array $context = [])
     {
         $message = !empty($message) ? $message : 'DTO validation fail.';

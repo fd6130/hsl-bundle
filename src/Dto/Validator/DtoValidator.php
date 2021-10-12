@@ -33,7 +33,7 @@ class DtoValidator implements DtoValidatorInterface
                 $errorMessages [] = $error->getPropertyPath() . ' => ' . $error->getMessage();
             }
 
-            throw new DtoValidationException($errorMessages);
+            throw new DtoValidationException('', $errorMessages);
         }
     }
 }
