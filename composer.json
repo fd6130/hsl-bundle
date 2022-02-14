@@ -13,12 +13,12 @@
         "php": ">=7.2.5",
         "babdev/pagerfanta-bundle": "^3.0",
         "mark-gerarts/automapper-plus-bundle": "^1.2",
-        "monterhealth/api-filter-bundle": "1.2.*",
+        "monterhealth/api-filter-bundle": "^1.2",
         "pagerfanta/pagerfanta": "^3.0",
         "symfony-bundles/json-request-bundle": "^4.0",
         "samj/fractal-bundle": "^4.0",
-        "symfony/validator": "^4.4|^5.0",
-        "symfony/yaml": "^4.4|^5.0",
+        "symfony/validator": "^4.4|^5.0|^6.0",
+        "symfony/yaml": "^4.4|^5.0|^6.0",
         "doctrine/inflector": "^1.4|^2.0"
     },
     "require-dev": {
